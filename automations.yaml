@@ -1,0 +1,46 @@
+- action:
+  - data:
+      message: "Netflix!"
+    service: notify.livingroom_tv
+  - alias: LG Playing Netflix
+    data:
+      message: "Netflix!"
+    service: media_player.living_room_speaker
+  - data:
+      message: "Netflix!"
+    service: persistent_notification.create
+  alias: LG TV State change
+  condition: []
+  id: '1512673707153'
+  trigger:
+  - entity_id: sensor.living_room_tv_source
+    platform: state
+    to: '"netflix"'
+  - entity_id: media_player.livingroom_tv
+    from: '"hdmi3"'
+    platform: state
+    to: '"netflix"'
+    
+- action:
+  - data:
+      message: "PC"
+    service: notify.livingroom_tv
+  - alias: LG Playing PC
+    data:
+      message: "PC"
+    service: media_player.living_room_speaker
+  - data:
+      message: "PC"
+      title: "It did receive"
+    service: persistent_notification.create
+  alias: LG switched to PC
+  condition: []
+  id: '1512673707153'
+  trigger:
+  - entity_id: sensor.living_room_tv_source
+    platform: state
+    to: '"hdmi3"'
+  - entity_id: media_player.livingroom_tv
+    from: '"netflix"'
+    platform: state
+    to: '"hdmi3"'

@@ -1,0 +1,176 @@
+homeassistant:
+  # Customization file
+  customize: !include customize.yaml
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret lat_home
+  longitude: !secret long_home
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 145
+  # metric for Metric, imperial for Imperial
+  unit_system: imperial
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: America/Chicago
+  
+zone 1:
+  name: Our Home
+  latitude: !secret lat_home
+  longitude: !secret long_home
+  icon: mdi:home
+  radius: 500  
+
+# Show links to resources in log and frontend
+#introduction:
+
+# Enables the frontend
+frontend:
+
+# Enables configuration UI
+config:
+
+http:
+  # Secrets are defined in the file secrets.yaml
+  api_password: !secret http_password
+  # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+  # base_url: example.duckdns.org:8123
+
+mqtt:
+
+device_tracker:
+  - platform: owntracks
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  # include_used_components: true
+
+# Discover some devices automatically
+discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time
+history:
+
+# View all events in a logbook
+logbook:
+
+# Enables a map showing the location of tracked devices
+map:
+
+# Track the sun
+sun:
+
+# Weather prediction
+# sensor:
+#  - platform: yr
+
+# Text to speech
+tts:
+  - platform: google
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+
+#nest
+nest:
+  client_id: !secret nest_client_id
+  client_secret: !secret nest_client_secret
+  
+#lgtv
+media_player:
+  - platform: webostv
+    host: 192.168.1.87
+    mac: !secret livingroom_tv_macaddress
+    name: livingroom_tv
+    customize:
+      sources:
+        - youtube
+        - netflix
+        - hulu
+        - amazon
+        - hdmi1
+        - hdmi2
+        - hdmi3
+
+#sensor to store the living room source
+sensor:
+  - platform: template
+    sensors:
+      living_room_tv_source:
+        value_template: '{{ states.media_player.living_room_tv.attributes["source"] }}'
+        friendly_name: 'Living Room TV Source'
+
+  - platform: ring
+  
+  - platform: wunderground
+    api_key: !secret wundergroundapi
+    monitored_conditions:
+      - alerts
+      - feelslike_f
+      - temp_f
+      - weather
+
+#Google calendar
+google:
+  client_id: !secret google_cal_client_id 
+  client_secret: !secret google_cal_client_secret
+
+    
+# Panel Iframe
+panel_iframe:
+  calendar:
+    title: 'Calendar'
+    url: !secret panelcalendarurl
+
+# LGTV NOTIFICATION notify
+notify:
+  - platform: webostv
+    host: 192.168.1.87
+    name: livingroom_tv
+    filename: webostv.conf
+    icon: "images/ha_icon.png"   
+
+ring:
+  username: !secret ring_email
+  password: !secret ring_password
+
+camera:
+  - platform: ring
+  #- platform: generic
+  #still_image_url: https://radblast.wunderground.com/cgi-bin/radar/WUNIDS_map?station=FWS&brand=wui&num=1&delay=15&type=N0R&frame=0&scale=0.75&noclutter=0&showstorms=0&mapx=400&mapy=240&centerx=400&centery=240&transx=0&transy=0&showlabels=1&severe=0&rainsnow=0&lightning=0&smooth=0&rand=25213416&lat=0&lon=0&label=you
+  #name: DFW weather
+
+
+binary_sensor:
+  - platform: ring  
+  
+switch:
+  - platform: template
+    switches:
+      message_tv:
+        friendly_name: "Send Message:"
+        value_template: "{{ is_state('sensor.message_tv', 'on') }}"
+        turn_on:
+          service: notify.livingroom_tv
+          data:
+            message: >-
+              {{states.input_text.text1.state}}
+        turn_off:
+          service: switch.turn_on
+          data:
+            entity_id: switch.message_tv_end
+        icon_template: mdi:message-text
+
+input_text:
+#TV Messenger text box
+  text1:
+    name: Message
+    initial: Write message here

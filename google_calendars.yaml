@@ -1,0 +1,30 @@
+
+- cal_id: mordecaidesign@gmail.com
+  entities:
+  - device_id: matt_scheuerman
+    name: Matt Scheuerman
+    track: true
+
+- cal_id: s3cnvde4evdq33k0cmqisfvp6k@group.calendar.google.com
+  entities:
+  - device_id: shalin__matts_calendar
+    name: Shalin + Matt's Calendar
+    track: true
+
+- cal_id: family15607637584966134479@group.calendar.google.com
+  entities:
+  - device_id: family
+    name: Family
+    track: true
+
+- cal_id: '#contacts@group.v.calendar.google.com'
+  entities:
+  - device_id: contacts
+    name: Contacts
+    track: true
+
+- cal_id: usa__en@holiday.calendar.google.com
+  entities:
+  - device_id: holidays_in_united_states
+    name: Holidays in United States
+    track: true
