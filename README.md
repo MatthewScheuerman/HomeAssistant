@@ -1,2 +1,2 @@
 # HomeAssistant
-A backup of all of my Home Assistant automation system
+A backup of my Home Assistant automation system
