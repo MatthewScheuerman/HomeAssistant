@@ -33,7 +33,9 @@ http:
   # Secrets are defined in the file secrets.yaml
   api_password: !secret http_password
   # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
-  # base_url: example.duckdns.org:8123
+  base_url: scheuermanhomeassistant.duckdns.org
+  ssl_certificate: /ssl/fullchain.pem
+  ssl_key: /ssl/privkey.pem
 
 mqtt:
 
@@ -118,6 +120,11 @@ sensor:
       - temp_f
       - weather
 
+  - platform: fastdotcom
+    minute:
+      - 0
+      - 30
+
 #Google calendar
 google:
   client_id: !secret google_cal_client_id 
@@ -174,3 +181,28 @@ input_text:
   text1:
     name: Message
     initial: Write message here
+
+dominos:
+  country_code: us
+  first_name: Matthew
+  last_name: Scheuerman
+  email: !secret dominos_email
+  phone: !secret mycell
+  address: !secret myaddress
+  orders:
+  - name: Medium Pan
+    codes:
+      - P12IPAZA
+
+#script:
+#  dominos:
+#    alias: Order Pizza
+#    service: dominos.order
+#    data:
+#      order_entity_id: dominos.medium_pan
+
+panel_custom:
+  - name: dominos
+    sidebar_title: Dominos
+    sidebar_icon: mdi:pizza
+    url_path: dominos
